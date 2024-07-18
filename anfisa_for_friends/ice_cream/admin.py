@@ -5,7 +5,19 @@ from .models import Category, Topping, Wrapper, IceCream
 
 # Этот вариант сработает для всех моделей приложения.
 # Вместо пустого значения в админке будет отображена строка "Не задано".
-# admin.site.empty_value_display = 'Не задано' 
+admin.site.empty_value_display = 'Не задано'
+
+
+# На страницу редактирования категории можно подгрузить блок с информацией о связанных с ней сортах мороженого
+# Подготавливаем модель IceCream для вставки на страницу другой модели. (2-й вариант - admin.TabularInline)
+class IceCreamInline(admin.StackedInline):
+    model = IceCream
+    extra = 0
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = (
+        IceCreamInline,
+    )
 
 
 # Создаём класс, в котором будем описывать настройки админки:
@@ -33,7 +45,7 @@ class IceCreamAdmin(admin.ModelAdmin):
 
     # Кортеж с полями, по которым можно фильтровать записи. 
     # Фильтры отобразятся справа от списка элементов.
-    list_filter = ('category', )
+    list_filter = ('is_published',)
 
     # В этом кортеже указываются поля, при клике на которые можно перейти
     # на страницу просмотра и редактирования записи. 
@@ -42,33 +54,18 @@ class IceCreamAdmin(admin.ModelAdmin):
 
     # Это свойство сработает для всех полей этой модели.
     # Вместо пустого значения будет выводиться строка "Не задано".
-    empty_value_display = 'Не задано'
+    # empty_value_display = 'Не задано'
 
     # Чтобы связанные записи можно было перекладывать из одного окошка в другое
     # указываем, для каких связанных моделей нужно включить такой интерфейс:
     filter_horizontal = ('toppings',)
 
 
-# На страницу редактирования категории можно подгрузить блок с информацией о связанных с ней сортах мороженого
-# Подготавливаем модель IceCream для вставки на страницу другой модели. (2-й вариант - admin.TabularInline)
-class IceCreamInline(admin.StackedInline):
-    model = IceCream
-    extra = 0
-
-class CategoryAdmin(admin.ModelAdmin):
-    inlines = (
-        IceCreamInline,
-    )
-    list_display = (
-        'title',        
-    )
-
-
-# Регистрируем новый класс:
-# указываем, что для отображения админки модели IceCream
-# вместо стандартного класса нужно использовать класс IceCreamAdmin
+# Регистрируем класс с настройками админки для моделей IceCream и Category:
 admin.site.register(IceCream, IceCreamAdmin)
-
 admin.site.register(Category, CategoryAdmin)
+# Регистрируем модели Topping и Wrapper, 
+# чтобы ими можно было управлять через админку
+# (интерфейс админки для этих моделей останется стандартным):
 admin.site.register(Topping)
 admin.site.register(Wrapper)
