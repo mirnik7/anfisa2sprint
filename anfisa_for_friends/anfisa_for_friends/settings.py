@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -30,6 +31,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'anfisa_for_friends.urls'
@@ -97,3 +99,9 @@ STATICFILES_DIRS = [
     ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Добавьте в settings.py эту константу, чтобы DjDT знал,
+# запросы с каких IP он должен обрабатывать.
+INTERNAL_IPS = [
+    '127.0.0.1',
+] 
